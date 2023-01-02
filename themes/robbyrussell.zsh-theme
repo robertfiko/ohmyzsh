@@ -1,4 +1,14 @@
-PROMPT="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
+setopt PROMPT_SUBST
+
+PROMPT='%(!.%{%F{yellow}%}.)$USER@%{$fg[white]%}%M '
+
+# arrow
+PROMPT+="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
+
+
+PROMPT+='$(erl_vsn)'
+
+# git info and path
 PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
