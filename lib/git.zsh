@@ -17,6 +17,19 @@ function git_prompt_info() {
     return 0
   fi
 
+  # If we are on a folder that is not git repository, but a worktree root
+  WORKTREE=$(__git_prompt_git rev-parse --is-inside-work-tree)
+  repo=""
+  if [ "$WORKTREE" = "false" ]; then
+    variable="WORKTREE_ROOT"
+    repo="$(git config --local remote.origin.url|sed -n 's#.*/\([^.]*\)\.git#\1#p' | head)/"
+    echo "${ZSH_THEME_GIT_PROMPT_PREFIX}${repo}${ref:gs/%/%%}${variable:gs/%/%%}$(parse_git_dirty)${ZSH_THEME_GIT_PROMPT_SUFFIX}"
+    return 0
+  fi
+
+
+  
+
   local ref
   ref=$(__git_prompt_git symbolic-ref --short HEAD 2> /dev/null) \
   || ref=$(__git_prompt_git rev-parse --short HEAD 2> /dev/null) \
@@ -29,7 +42,8 @@ function git_prompt_info() {
     && upstream=" -> ${upstream}"
   fi
 
-  echo "${ZSH_THEME_GIT_PROMPT_PREFIX}${ref:gs/%/%%}${upstream:gs/%/%%}$(parse_git_dirty)${ZSH_THEME_GIT_PROMPT_SUFFIX}"
+  repo="$(git config --local remote.origin.url|sed -n 's#.*/\([^.]*\)\.git#\1#p' | head)/"
+  echo "${ZSH_THEME_GIT_PROMPT_PREFIX}${repo}${ref:gs/%/%%}${upstream:gs/%/%%}$(parse_git_dirty)${ZSH_THEME_GIT_PROMPT_SUFFIX}"
 }
 
 # Checks if working tree is dirty
